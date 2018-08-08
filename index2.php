@@ -31,7 +31,7 @@
 					if($this.data("poll") === true){
 						setTimeout(function(){
 							$.ajax({
-								url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=480',
+								url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=' + $this.data("width"),
 								type: 'get',
 								cache: false,
 								context: this,
