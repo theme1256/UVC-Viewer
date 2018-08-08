@@ -8,7 +8,7 @@
       <div class="starter-template">
 <?php include("include/cameras.php"); ?>
       </div>
-    </div><!-- /.container -->
+    </div>
     <div id="underlay"></div>
     <?php include("include/scripts.php"); ?>
     <script src="js/poll.min.js"></script>

@@ -16,6 +16,6 @@
 		<li <?php if ($basename == 'info') echo ' class="active"'; ?>><a href="info.php">Info</a></li>
 		<?php if ($auth == 'true') echo '<li><a href="logout.php">Logout</a></li>' ?>
 	</ul>
-	</div><!--/.nav-collapse -->
+	</div>
   </div>
 </nav>

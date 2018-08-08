@@ -3,16 +3,16 @@ $('.camera').each(function() {
       (function poll() {
 	if ($this.data("poll") === true){
  	setTimeout(function () {
-	$.ajax({ url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=' + $this.data("width"),
+	$.ajax({ url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=480',
 		type: 'get',
                 cache: false,
 		context: this,
                 success: function(output) {
-			$this.html('<img src="data:image/jpeg;base64,' + output + '" width="' + $this.data("width") + '" />');
+			$this.html('<img src="data:image/jpeg;base64,' + output + '" />');
 			},
                   complete: poll
                 });
-         },1000);
+         },400);
 	}
 	else{
 	setTimeout(poll, 10); 
