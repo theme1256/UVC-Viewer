@@ -14,6 +14,8 @@
 
 			.grid_3{ width: 33%; height: 33%; float: left; }
 			.grid_3.layer_1{ width: 66%; height: 66%; float: left; }
+
+			.grid_4{ width: 25%; height: 25%; float: left; }
 		</style>
 	</head>
 	<body>
