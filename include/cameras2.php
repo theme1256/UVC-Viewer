@@ -61,7 +61,7 @@
 				echo "</div>".PHP_EOL;
 				$x += 3;
 			} else{
-				echo "<div class=\"camera grid_2 layer_1\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 ".($x == 6 ? "l" : "r")."\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			}
 		}
 	} elseif(8 <= $cam_count && $cam_count <= 9){
@@ -90,7 +90,7 @@
 				echo "</div>".PHP_EOL;
 				$x += 3;
 			} else{
-				echo "<div class=\"camera grid_2 layer_1\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			}
 		}
 	} elseif(11 <= $cam_count && $cam_count <= 13){
@@ -102,9 +102,9 @@
 		*/
 		for($x = 0; $x < count($camera); $x++){
 			if($x == 0){
-				echo "<div class=\"camera grid_2 layer_1\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			} else{
-				echo "<div class=\"grid_2 layer_1\">".PHP_EOL;
+				echo "<div class=\"grid_2 layer_1 ".($x == 5 ? "r" : "l")."\">".PHP_EOL;
 				for($i = 0; $i < 4; $i++){
 					if(!empty($camera[$x]['id']))
 						echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
@@ -134,7 +134,7 @@
 		*/
 		for($x = 0; $x < count($camera); $x++){
 			if($x == 0){
-				echo "<div class=\"camera grid_2 layer_1 l\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			} else{
 				echo "<div class=\"grid_2 layer_1\">".PHP_EOL;
 				for($i = 0; $i < 9; $i++){
