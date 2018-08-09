@@ -34,7 +34,6 @@
 			$im = file_get_contents("img/dead.jpg");
 		}
 		echo gzencode(base64_encode($im), $compressionLevel);
-		// curl_close($ch);
 	} else{
 		echo "";
 	}
