@@ -14,7 +14,10 @@
 	);
 	if(isset($_GET["cameraId"])){
 		try{
-			$url = 'https://'.$domain.':'.$port.'/api/2.0/snapshot/camera/'.$cameraId.'?force=true&width='.$width.'&apiKey='.$apiKey;
+			if(empty($_GET['host']))
+				$url = 'https://'.$domain.':'.$port.'/api/2.0/snapshot/camera/'.$cameraId.'?force=true&width='.$width.'&apiKey='.$apiKey;
+			else
+				$url = "http://".$_GET['host']."/snap.jpeg";
 			$im = @file_get_contents($url, false, stream_context_create($arrContextOptions));
 			if(empty($im) || var_export($im, true) == false || json_decode($im)["rc"] == "error"){
 				$im = file_get_contents("img/dead.jpg");

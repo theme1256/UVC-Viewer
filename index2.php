@@ -16,6 +16,11 @@
 			.grid_3.layer_1{ width: 66%; height: 66%; float: left; }
 
 			.grid_4{ width: 25%; height: 25%; float: left; }
+
+			span.cam-name{ position: relative; top: 80%; width: inherit; color: white; text-align: center; }
+			.grid_2.layer_2 .cam-name{ font-size: 50%; top: 77%; }
+			.r .cam-name{ left: 50%; }
+			.l .cam-name{ right: 50%; }
 		</style>
 	</head>
 	<body>
@@ -24,8 +29,18 @@
 		?>
 		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 		<script type="text/javascript">
+			var dead_img = "";
+
 			$(function(){
 				rz();
+				$.ajax({
+					url: 'image.php?cameraId=dead',
+					type: 'get',
+					cache: false,
+					success: function(output){
+						dead_img = output;
+					}
+				});
 			});
 			$('.camera').each(function(){
 				var $this = $(this);
@@ -33,12 +48,16 @@
 					if($this.data("poll") === true){
 						setTimeout(function(){
 							$.ajax({
-								url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=' + $this.data("width"),
+								url: 'image.php?cameraId=' + $this.data("cameraid") + '&width=' + $this.data("width") + '&host=' + $this.data("ip"),
 								type: 'get',
 								cache: false,
 								context: this,
 								success: function(output){
-									$this.html('<img src="data:image/jpeg;base64,' + output + '" />');
+									if(output == dead_img){
+										$this.html('<img src="data:image/jpeg;base64,' + output + '" /><span class="cam-name">' + $this.data("name") + '</span>');
+									} else{
+										$this.html('<img src="data:image/jpeg;base64,' + output + '" />');
+									}
 								},
 								complete: poll
 							});

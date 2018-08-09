@@ -13,7 +13,7 @@
 	$cam_count = count($data);
 	$camera = [];
 	for($i = 0; $i < $cam_count; $i++){
-		$camera[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"]];
+		$camera[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"], "ip" => $data[$i]["host"]];
 	}
 
 	usort($camera, function($a, $b){
@@ -24,14 +24,14 @@
 		/*
 			x
 		*/
-		echo "<div class=\"camera grid_1\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"1080\" data-poll=\"true\"></div>".PHP_EOL;
+		echo "<div class=\"camera grid_1\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"1080\" data-poll=\"true\"></div>".PHP_EOL;
 	} elseif(2 <= $cam_count && $cam_count <= 4){
 		/*
 			 x x
 			 x x
 		*/
 		for($x = 0; $x < count($camera); $x++){
-			echo "<div class=\"camera grid_2 layer_1 ".($x%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+			echo "<div class=\"camera grid_2 layer_1 ".($x%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 		}
 	} elseif(5 <= $cam_count && $cam_count <= 6){
 		/*
@@ -41,9 +41,9 @@
 		*/
 		for($x = 0; $x < count($camera); $x++){
 			if($x == 0)
-				echo "<div class=\"camera grid_3 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_3 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			else
-				echo "<div class=\"camera grid_3 layer_2 ".(($x <= 2 || $x == 5) ? "l" : "r")."\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_3 layer_2 ".(($x <= 2 || $x == 5) ? "l" : "r")."\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 		}
 	} elseif($cam_count == 7){
 		/*
@@ -56,12 +56,12 @@
 			if($x == 1){
 				echo "<div class=\"grid_2 layer_1 l\">".PHP_EOL;
 				for($i = 0; $i < 4; $i++){
-					echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+					echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-ip=\"".$camera[$x+$i]['ip']."\" data-name=\"".$camera[$x+$i]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 				}
 				echo "</div>".PHP_EOL;
 				$x += 3;
 			} else{
-				echo "<div class=\"camera grid_2 layer_1 ".($x == 6 ? "l" : "r")."\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 ".($x == 6 ? "l" : "r")."\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			}
 		}
 	} elseif(8 <= $cam_count && $cam_count <= 9){
@@ -71,7 +71,7 @@
 			 x x x
 		*/
 		for($x = 0; $x < count($camera); $x++){
-			echo "<div class=\"camera grid_3 layer_2 l\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+			echo "<div class=\"camera grid_3 layer_2 l\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 		}
 	} elseif($cam_count == 10){
 		/*
@@ -85,12 +85,12 @@
 				echo "<div class=\"grid_2 layer_1 l\">".PHP_EOL;
 				for($i = 0; $i < 4; $i++){
 					if(!empty($camera[$x]['id']))
-						echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+						echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-ip=\"".$camera[$x+$i]['ip']."\" data-name=\"".$camera[$x+$i]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 				}
 				echo "</div>".PHP_EOL;
 				$x += 3;
 			} else{
-				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			}
 		}
 	} elseif(11 <= $cam_count && $cam_count <= 13){
@@ -102,12 +102,12 @@
 		*/
 		for($x = 0; $x < count($camera); $x++){
 			if($x == 0){
-				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			} else{
 				echo "<div class=\"grid_2 layer_1 ".($x == 5 ? "r" : "l")."\">".PHP_EOL;
 				for($i = 0; $i < 4; $i++){
 					if(!empty($camera[$x]['id']))
-						echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+						echo "<div class=\"camera grid_2 layer_2 ".($i%2 == 0 ? "r" : "l")."\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-ip=\"".$camera[$x+$i]['ip']."\" data-name=\"".$camera[$x+$i]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 				}
 				echo "</div>".PHP_EOL;
 				$x += 3;
@@ -121,7 +121,7 @@
 			x x x x
 		*/
 		for($x = 0; $x < count($camera); $x++){
-			echo "<div class=\"camera grid_4 layer_2\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+			echo "<div class=\"camera grid_4 layer_2\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 		}
 	} elseif(17 <= $cam_count && $cam_count <= 20){
 		/*
@@ -134,12 +134,12 @@
 		*/
 		for($x = 0; $x < count($camera); $x++){
 			if($x == 0){
-				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
+				echo "<div class=\"camera grid_2 layer_1 r\" data-cameraid=\"".$camera[$x]['id']."\" data-ip=\"".$camera[$x]['ip']."\" data-name=\"".$camera[$x]['name']."\" data-width=\"720\" data-poll=\"true\"></div>".PHP_EOL;
 			} else{
 				echo "<div class=\"grid_2 layer_1\">".PHP_EOL;
 				for($i = 0; $i < 9; $i++){
 					if(!empty($camera[$x]['id']))
-						echo "<div class=\"camera grid_3 layer_2 l\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
+						echo "<div class=\"camera grid_3 layer_2 l\" data-cameraid=\"".$camera[$x+$i]['id']."\" data-ip=\"".$camera[$x+$i]['ip']."\" data-name=\"".$camera[$x+$i]['name']."\" data-width=\"480\" data-poll=\"true\"></div>".PHP_EOL;
 				}
 				echo "</div>".PHP_EOL;
 				$x += 8;
