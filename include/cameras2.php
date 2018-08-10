@@ -1,20 +1,25 @@
 <?php
 	require_once('config/config.php');
 
-	$arrContextOptions = array(
-		"ssl"=>array(
-			"verify_peer"=>false,
-			"verify_peer_name"=>false,
-		),
-	);
+	$arrContextOptions = [
+		"ssl" => [
+			"verify_peer" => false,
+			"verify_peer_name" => false,
+		],
+		"http" => [
+			"timeout" => 1
+		]
+	];
 
 	$json = file_get_contents('https://'.$domain.':'.$port.'/api/2.0/camera?apiKey='.$apiKey, false, stream_context_create($arrContextOptions));
 	$data = json_decode($json, true)["data"];
 	$cam_count = count($data);
 	$camera = [];
 	for($i = 0; $i < $cam_count; $i++){
-		$camera[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"], "ip" => $data[$i]["host"]];
+		if($data[$i]["managed"])
+			$camera[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"], "ip" => $data[$i]["host"]];
 	}
+	$cam_count = count($camera);
 
 	usort($camera, function($a, $b){
 		return strcmp($a["name"], $b["name"]);

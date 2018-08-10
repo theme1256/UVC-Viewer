@@ -1,17 +1,27 @@
 <?php
-	include("include/authcheck.php");
-	include("config/config.php");
+	require_once("config/config.php");
+
 	header('Content-Encoding: gzip');
-	if (isset($_GET["cameraId"])) $cameraId = $_GET["cameraId"];
-	else $cameraId = "";
-	if (isset($_GET["width"]))$width = $_GET["width"];
-	else $width = "720";
-	$arrContextOptions = array(
-		"ssl"=>array(
-			"verify_peer"=>false,
-			"verify_peer_name"=>false,
-		),
-	);
+
+	if(isset($_GET["cameraId"]))
+		$cameraId = $_GET["cameraId"];
+	else
+		$cameraId = "";
+	if(isset($_GET["width"]))
+		$width = $_GET["width"];
+	else
+		$width = "720";
+
+	$arrContextOptions = [
+		"ssl" => [
+			"verify_peer" => false,
+			"verify_peer_name" => false,
+		],
+		"http" => [
+			"timeout" => 1
+		]
+	];
+
 	if(isset($_GET["cameraId"])){
 		try{
 			if(empty($_GET['host']))
