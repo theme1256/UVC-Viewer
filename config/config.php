@@ -8,5 +8,5 @@
 	$defaultWidth = "480";
 	$title = "Unifi HTML5 Video";
 	$compressionLevel = "9";
-	$refreshtime = 500;
+	$refreshtime = 1000;
 ?>

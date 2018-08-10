@@ -27,7 +27,7 @@
 			if(empty($_GET['host']))
 				$url = 'https://'.$domain.':'.$port.'/api/2.0/snapshot/camera/'.$cameraId.'?force=true&width='.$width.'&apiKey='.$apiKey;
 			else
-				$url = "http://".$_GET['host']."/snap.jpeg";
+				$url = "http://".$_GET['host']."/snap.jpeg?cb=".time();
 			$im = @file_get_contents($url, false, stream_context_create($arrContextOptions));
 			if(empty($im) || var_export($im, true) == false || json_decode($im)["rc"] == "error"){
 				$im = file_get_contents("img/dead.jpg");
