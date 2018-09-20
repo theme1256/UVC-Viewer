@@ -1,0 +1,16 @@
+# Rewrites
+Options -MultiViews
+RewriteEngine On
+
+# Insert rewrites here:
+RewriteRule ^setup/(.*)$ setup.php?step=$1
+
+# No need for .php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Prevent viewing of .htaccess file
+<Files .htaccess>
+	order allow,deny
+	deny from all
+</Files>

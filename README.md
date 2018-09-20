@@ -1,39 +1,21 @@
-This script uses the API found in the UniFi Video NVR v3 to grab an image from a specific camera and loop that image to create a faux 
-video. This is the same way the image is displayed in the camera's local web interface and why I chose to do it this way. 
+Based on X project by Y
 
-RTSP does not work well with browsers so this HTML5 compliant solution was created.
+## Setup
 
-# PREREQUISITE
+Install apache and php on the Raspberry Pi3  
+```bash
+sudo apt install apache2 php libapache2-mod-php
+```
+Clone this project to www-dir  
+```bash
+cd /var/www/html
+git clone http://project.url:project .
+```
+On the Pi, goto http://localhost/  
+Follow the instructions
 
-### SOFTWARE
+## Setup auto-launch Chromium and view streams
 
-#### PHP
-php5 php5-json
-
-# SETUP
-1. Set the domain or ip address, port, and API key in config.php
-
-# USAGE
-1. Go to index.php and login
-2. Camera will load an image every 500ms or as long as it needs to get from NVR
-
-# MULTIPLE CAMERAS
-All cameras assigned to the API key's user will be displayed
-
-# Authentication
-By Default the login is user = admin and password = password
-
-### CHANGE PASSWORD
-Generate a new sha256 hash and insert into config/config.php
-
-### DISABLE AUTHENTICATION
-To disable authentication set $auth = "false"; in config/config.php
-
-# TIPS
-### Zoom
-To Zoom double click on any camera.
-
-# SCREENSHOTS
-
-![screenshot](img/screenshot.jpg)
-![screenshot](img/screenshot2.jpg)
+Copy `config/autoChromium.desktop` to `~/.config/autostart/autoChromium.desktop`  
+or  
+execute `config/setup.sh`
