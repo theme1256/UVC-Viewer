@@ -40,12 +40,28 @@
 		header("Location: setup/2");
 	} elseif($action == "step-2"){
 		// Save the list of cameras to display
-
+		$cams = [];
+		require_once __DIR__ . "/include/cameras.php";
+		$cam = new Cameras();
+		foreach($cam->fetch_all() as $c){
+			if(in_array($c["id"], $_POST['camshow']))
+				$cams[] = (object)["id" => $c["id"],"name" => $c["name"],"ip" => $c["ip"],"sort" => count($cams)];
+		}
+		$conf->set("cameras", $cams);
 		$conf->save();
 		header("Location: setup/3");
 	} elseif($action == "step-3"){
-		// Save the view, compressionrate and refresh time
-
+		// Save the view (sort), compressionrate and refresh time
+		$cams = [];
+		require_once __DIR__ . "/include/cameras.php";
+		$cam = new Cameras();
+		foreach($cam->fetch_all() as $c){
+			if(isset($_POST["camshow_" . $c["id"]]))
+				$cams[] = (object)["id" => $c["id"],"name" => $c["name"],"ip" => $c["ip"],"sort" => $_POST["camshow_" . $c["id"]]];
+		}
+		$conf->set("cameras", $cams);
+		$conf->set("compressionLevel", (empty($_POST["compression-level"]) ? 9 : $_POST["compression-level"]));
+		$conf->set("refreshtime", (empty($_POST["refreshtime"]) ? 1000 : $_POST["refreshtime"]));
 		$conf->save();
 		header("Location: setup/4");
 	} elseif($action == "step-4"){

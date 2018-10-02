@@ -60,19 +60,67 @@
 			</form>
 		<?php
 			elseif($step == 2):
+				require_once __DIR__ . "/include/cameras.php";
+				$cam = new Cameras();
 		?>
-			Cams
+			<form method="POST" action="backend">
+				<input type="hidden" name="action" value="step-2">
+				<?php
+					foreach($cam->fetch_all() as $c){
+				?>
+				<div class="form-group">
+					<label for="camshow_<?= $c["id"];?>"><?= $c["name"] . " (" . $c["ip"] . ")";?></label>
+					<input type="checkbox" name="camshow[]" id="camshow_<?= $c["id"];?>" class="form-control" value="<?= $c["id"];?>">
+				</div>
+				<?php
+					}
+				?>
+				<div class="form-control text-right">
+					<button class="btn btn-primary">Next</button>
+				</div>
+			</form>
 		<?php
 			elseif($step == 3):
 		?>
-			View
-			compression
-			refreshtime
+			<!-- View -->
+			<form method="POST" action="backend">
+				<input type="hidden" name="action" value="step-3">
+				<?php
+					foreach($conf->setup->cameras as $c){
+				?>
+				<div class="form-group">
+					<label for="camshow_<?= $c["id"];?>"><?= $c["name"] . " (" . $c["ip"] . ")";?></label>
+					<input type="number" name="camshow_<?= $c["id"];?>" id="camshow_<?= $c["id"];?>" class="form-control" value="<?= $c["sort"];?>">
+				</div>
+				<?php
+					}
+				?>
+				<div class="form-group">
+					<label for="compression-level">Compression level</label>
+					<input type="text" name="compression-level" id="compression-level" class="form-control" value="<?= $conf->setup->compressionLevel;?>">
+					<p class="form-text text-muted">Higher is more. Default is 9</p>
+				</div>
+				<div class="form-group">
+					<label for="refreshtime">Refreshtime</label>
+					<input type="text" name="refreshtime" id="refreshtime" class="form-control" value="<?= $conf->setup->refreshtime;?>">
+					<p class="form-text text-muted">In ms. Default is 1000</p>
+				</div>
+				<div class="form-control text-right">
+					<button class="btn btn-primary">Next</button>
+				</div>
+			</form>
 		<?php
 			elseif($step == 4):
 		?>
-			Overview
-			Gem
+			<pre>
+				<?= var_export($conf->setup);?>
+			</pre>
+			<form method="POST" action="backend">
+				<input type="hidden" name="action" value="step-4">
+				<div class="form-control text-right">
+					<button class="btn btn-primary">Gem</button>
+				</div>
+			</form>
 		<?php
 			endif;
 		endif;

@@ -1,0 +1,22 @@
+{
+	"setup": false,
+	"domain": "",
+	"port": 7443,
+	"apiKey": "",
+	"cachepath": "img/cached/",
+	"auth": {
+		"username": "",
+		"password": ""
+	},
+	"title": "Unifi cam-viewer - Setup",
+	"compressionLevel": 9,
+	"refreshtime": 1000,
+	"cameras": [
+		{
+			"id": "",
+			"ip": "",
+			"name": "",
+			"sort": 0
+		}
+	]
+}
