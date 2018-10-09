@@ -1,7 +1,7 @@
 <?php
-	require_once __DIR__ . "config/config.php";
+	require_once __DIR__ . "/include/head.php";
 
-	require_once __DIR__ . "include/cameras.php";
+	require_once __DIR__ . "/include/cameras.php";
 	$cam = new Cameras();
 
 	echo $cam->view($conf->setup->cameras);
@@ -21,22 +21,22 @@
 			data: {
 				action: "get-image",
 				cameraId: "dead"
-			}
+			},
 			type: 'post',
 			cache: false,
 			success: function(output){
 				dead_img = output;
 			}
 		});
-	});
-	$('.camera').each(function(){
-		// Løber alle kameraerne igennem, så de bliver opdateret
-		var $this = $(this);
-		if($this.data("poll") === true){
-			intervals[$this.data("cameraid")] = setInterval(function(){
-				fetch($this);
-			}, <?= $conf->setup->refreshtime;?>);
-		}
+		$('.camera').each(function(){
+			// Løber alle kameraerne igennem, så de bliver opdateret
+			var $this = $(this);
+			if($this.data("poll") === true){
+				intervals[$this.data("cameraid")] = setInterval(function(){
+					fetch($this);
+				}, <?= $conf->setup->refreshtime;?>);
+			}
+		});
 	});
 	function rz(){
 		var w_h = $(window).height();
@@ -63,7 +63,7 @@
 					action: "get-image",
 					cameraId: $this.data("cameraid"),
 					host: $this.data("ip")
-				}
+				},
 				type: 'post',
 				cache: false,
 				async: true,

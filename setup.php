@@ -7,7 +7,7 @@
 
 		if($conf->setup->setup == true && $_SESSION["login"] == false):
 	?>
-		<form method="POST" action="backend">
+		<form method="POST" action="<?= ROOT;?>backend">
 			<input type="hidden" name="action" value="login">
 			<input type="hidden" name="step" value="<?= $step;?>">
 			<div class="form-group">
@@ -27,7 +27,7 @@
 
 			if($step == 1):
 		?>
-			<form method="POST" action="backend">
+			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-1">
 				<div class="form-group">
 					<label for="nvr-ip">NVR IP or domain</label>
@@ -63,7 +63,7 @@
 				require_once __DIR__ . "/include/cameras.php";
 				$cam = new Cameras();
 		?>
-			<form method="POST" action="backend">
+			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-2">
 				<?php
 					foreach($cam->fetch_all() as $c){
@@ -83,14 +83,14 @@
 			elseif($step == 3):
 		?>
 			<!-- View -->
-			<form method="POST" action="backend">
+			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-3">
 				<?php
 					foreach($conf->setup->cameras as $c){
 				?>
 				<div class="form-group">
-					<label for="camshow_<?= $c["id"];?>"><?= $c["name"] . " (" . $c["ip"] . ")";?></label>
-					<input type="number" name="camshow_<?= $c["id"];?>" id="camshow_<?= $c["id"];?>" class="form-control" value="<?= $c["sort"];?>">
+					<label for="camshow_<?= $c->id;?>"><?= $c->name . " (" . $c->ip . ")";?></label>
+					<input type="number" name="camshow_<?= $c->id;?>" id="camshow_<?= $c->id;?>" class="form-control" value="<?= $c->sort;?>">
 				</div>
 				<?php
 					}
@@ -115,7 +115,7 @@
 			<pre>
 				<?= var_export($conf->setup);?>
 			</pre>
-			<form method="POST" action="backend">
+			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-4">
 				<div class="form-control text-right">
 					<button class="btn btn-primary">Gem</button>
