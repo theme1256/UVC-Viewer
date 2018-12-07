@@ -77,10 +77,14 @@
 			$cameraId = "dead.img";
 			// die("{\"error\": true, \"reason\": \"missing cameraId\"}");
 
+		// header('Content-Encoding: text/html');
 		header('Content-Encoding: gzip');
 
 		require_once __DIR__ . "/include/cameras.php";
 		$cam = new Cameras();
+		// $str = $cam->fetch_img($cameraId, $_POST['host']);
+		// echo $cameraId;
+		// echo base64_encode($cam->fetch_img($cameraId, $_POST['host']));
 		echo gzencode(base64_encode($cam->fetch_img($cameraId, $_POST['host'])), $conf->setup->compressionLevel);
 	}
 ?>

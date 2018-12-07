@@ -14,7 +14,7 @@ git clone http://project.url:project .
 On the Pi, goto http://localhost/  
 Follow the instructions
 
-## Setup auto-launch Chromium and view streams
+## Setup auto-launch Chromium and show streams
 
 Copy `config/autoChromium.desktop` to `~/.config/autostart/autoChromium.desktop`  
 or  

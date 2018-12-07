@@ -7,8 +7,9 @@
 	echo $cam->view($conf->setup->cameras);
 ?>
 <script type="text/javascript">
-	var dead_img = "";
-	var intervals = [];
+	var dead_img = "",
+		start_time = Date.now(),
+		intervals = [];
 
 	$(window).resize(function(event){
 		rz();
@@ -38,6 +39,8 @@
 			}
 		});
 	});
+
+	// Funktion som holder styr på at billederne er i korrekt gitter, når skærmen skifter størrelse
 	function rz(){
 		var w_h = $(window).height();
 		if(cam_count == 1){
@@ -55,27 +58,28 @@
 			$(".camera.layer_2").height(w_h/4);
 		}
 	}
+
+	// Henter et nyt billede, tjekker om der er gået mere end 15 minutter, siden siden blev loadet og reload i det tilfælde, for at spare RAM
 	function fetch($this){
 		if($this.data("poll") === true){
-			$.ajax({
-				url: 'backend',
-				data: {
-					action: "get-image",
-					cameraId: $this.data("cameraid"),
-					host: $this.data("ip")
-				},
-				type: 'post',
-				cache: false,
-				async: true,
-				success: function(output){
-					if(output == dead_img){
-						$this.html('<img src="data:image/jpeg;base64,' + output + '" /><span class="cam-name">' + $this.data("name") + '</span>');
-						$("span.cam-name").each(function(i, e){var t = $(e);t.css("margin-left", "-"+t.width()/2+"px")});
-					} else{
-						$this.html('<img src="data:image/jpeg;base64,' + output + '" />');
-					}
-				}
-			});
+			// Hvis den har kørt i mere end 15 minutter, reload for at tømme source (RAM)
+			if(Date.now() - start_time >= 900000)
+				location.reload();
+
+			// Lav et billede, som objekt
+			var img = new Image(),
+				ts = Date.now();
+
+			// Når billedet er loadet, sæt billedet ind det rigtige sted, så det bliver vist
+			img.onload = function() {
+				$this.html('<img src="' + img.src + '" /><span class="cam-name">' + $this.data("name") + '</span>');
+				// Slet objektet, for at spare på RAM
+				img = undefined;
+				delete(img);
+			};
+
+			// Hent billedet direkte fra kameraet
+			img.src = 'http://' + $this.data("ip") + '/snap.jpeg?cb=' + ts;
 		}
 	}
 </script>

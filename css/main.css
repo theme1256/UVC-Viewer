@@ -1,5 +1,6 @@
 html.c-none{ cursor: none; }
 body.c-none{ margin: 0; background: black; cursor: none; }
+body{ padding: 0 !important; }
 img{ max-width: 100%; height: 100%; }
 .l > img{ float: left; }
 .r > img{ float: right; }

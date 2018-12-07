@@ -5,9 +5,16 @@
 	class Config{
 		public $setup = null;
 		private $conf_file = "";
+		private $sample_file = "";
 		
 		function __construct(){
 			$this->conf_file = __DIR__ . "/conf.json";
+			$this->sample_file = __DIR__ . "/conf-sample.json";
+
+			// Hvis konfigurationsfilen ikke findes, så kopier sample-filen
+			if(!file_exists($this->conf_file))
+				copy($this->sample_file, $this->conf_file);
+
 			$this->setup = (object)[];
 
 			$json = json_decode(file_get_contents($this->conf_file));

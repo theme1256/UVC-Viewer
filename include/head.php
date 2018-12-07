@@ -20,7 +20,7 @@
 		<!-- Bootstrap core CSS -->
 		<link href="<?= ROOT;?>css/bootstrap.min.css?v=4.1.3" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="<?= ROOT;?>css/main.css" rel="stylesheet">
+		<link href="<?= ROOT;?>css/main.css?1" rel="stylesheet">
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
