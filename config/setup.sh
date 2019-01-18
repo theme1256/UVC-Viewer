@@ -34,3 +34,6 @@ sudo wget -q -o=tw.deb https://download.teamviewer.com/download/linux/version_13
 sudo dpkg --install tw.deb
 sudo rm tw.deb
 sudo apt install -f
+
+sudo chown www-data:www-data /var/www -R
+sudo chmod 775 /var/www -R
