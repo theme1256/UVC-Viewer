@@ -25,10 +25,12 @@ sudo chown pi:pi /home/pi/.config -R
 
 sudo apt install apache2 -y
 sudo a2enmod rewrite
-sudo echo 's/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride None/<Directory /var/www/>\n	Options Indexes FollowSymLinks\n	AllowOverride All/g' >> /etc/apache2/apache2.conf
+sudo echo 's/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride None/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride All/g' >> /etc/apache2/apache2.conf
 sudo service apache2 restart
 
 sudo apt install php libapache2-mod-php -y
 
-sudo wget -q -o=- https://download.teamviewer.com/download/linux/version_13x/teamviewer-host_armhf.deb | dpkg --install -
+sudo wget -q -o=tw.deb https://download.teamviewer.com/download/linux/version_13x/teamviewer-host_armhf.deb
+sudo dpkg --install tw.deb
+sudo rm tw.deb
 sudo apt install -f
