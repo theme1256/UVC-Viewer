@@ -1,4 +1,5 @@
 sudo mkdir /home/pi/.config/lxsession
+sudo mkdir /home/pi/.config/lxsession/LXDE-pi
 sudo mkdir /home/pi/.config/autostart
 
 sudo echo "@xset s 0 0" >> /home/pi/.config/lxsession/LXDE-pi/autostart
