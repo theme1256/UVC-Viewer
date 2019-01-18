@@ -25,7 +25,7 @@ sudo chown pi:pi /home/pi/.config -R
 
 sudo apt install apache2 -y
 sudo a2enmod rewrite
-sudo echo 's/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride None/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride All/g' >> /etc/apache2/apache2.conf
+sudo sed -i 's/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride None/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride All/g' /etc/apache2/apache2.conf
 sudo service apache2 restart
 
 sudo apt install php libapache2-mod-php -y
