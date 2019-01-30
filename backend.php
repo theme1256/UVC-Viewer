@@ -16,25 +16,40 @@
 				$_SESSION["error"] = "Username or password not matching";
 		}
 		header("Location: setup/" . $step);
-	} elseif($action == "step-1"){
+	} elseif($action == "step-0"){
 		if(empty($_POST["nvr-ip"])){
 			$_SESSION["error"] = "Missing NVR IP";
 		} elseif(empty($_POST["nvr-port"])){
 			$_SESSION["error"] = "Missing NVR port";
 		} elseif(empty($_POST["site-title"])){
 			$_SESSION["error"] = "Missing site title";
-		} elseif(empty($_POST["nvr-api-key"])){
+		} elseif(empty($_POST["version"])){
+			$_SESSION["error"] = "Missing NVR version";
+		} else{
+			$conf->set("domain", $_POST["nvr-ip"]);
+			$conf->set("port", $_POST["nvr-port"]);
+			$conf->set("title", $_POST["site-title"]);
+			$conf->set("unifi", (object)["version" => $_POST["version"], "username" => "", "password" => "", "apiKey" => ""]);
+			$conf->save();
+		}
+		header("Location: setup/1");
+	} elseif($action == "step-1"){
+		if(empty($_POST["nvr-username"]) && $conf->setup->unifi->version == "unifi-protect"){
+			$_SESSION["error"] = "Missing NVR username";
+		} elseif(empty($_POST["nvr-password"]) && $conf->setup->unifi->version == "unifi-protect"){
+			$_SESSION["error"] = "Missing NVR password";
+		} elseif(empty($_POST["nvr-api-key"]) && $conf->setup->unifi->version == "unifi-video"){
 			$_SESSION["error"] = "Missing API-key";
 		} elseif(empty($_POST["username"])){
 			$_SESSION["error"] = "Missing username";
 		} elseif(empty($_POST["password"])){
 			$_SESSION["error"] = "Missing password";
 		} else{
-			$conf->set("domain", $_POST["nvr-ip"]);
-			$conf->set("port", $_POST["nvr-port"]);
-			$conf->set("title", $_POST["site-title"]);
-			$conf->set("apiKey", $_POST["nvr-api-key"]);
-			$conf->set("auth", (object)["username" => $_POST[""], "password" => hash('sha256', $_POST["password"])]);
+			if($conf->setup->unifi->version == "unifi-protect")
+				$conf->set("unifi", (object)["version" => $conf->setup->unifi->version, "username" => $_POST["nvr-username"], "password" => $_POST["nvr-password"], "apiKey" => ""]);
+			elseif($conf->setup->unifi->version == "unifi-video")
+				$conf->set("unifi", (object)["version" => $conf->setup->unifi->version, "username" => "", "password" => "", "apiKey" => $_POST["nvr-api-key"]]);
+			$conf->set("auth", (object)["username" => $_POST["username"], "password" => hash('sha256', $_POST["password"])]);
 			$conf->save();
 		}
 		header("Location: setup/2");

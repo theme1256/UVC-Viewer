@@ -50,22 +50,74 @@
 
 		public function fetch_all(){
 			global $conf;
-			$data = json_decode(
-				file_get_contents(
-					'https://'.$conf->setup->domain.':'.$conf->setup->port.'/api/2.0/camera?apiKey='.$conf->setup->apiKey, 
-					false, 
-					stream_context_create($this->opts)
-				), 
-				true)["data"];
 			$cameras = [];
-			for($i = 0; $i < count($data); $i++){
-				if($data[$i]["managed"])
-					$cameras[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"], "ip" => $data[$i]["host"]];
-			}
+			if($conf->setup->unifi->version == "unifi-video"):
+				$data = json_decode(
+					file_get_contents(
+						'https://'.$conf->setup->domain.':'.$conf->setup->port.'/api/2.0/camera?apiKey='.$conf->setup->apiKey, 
+						false, 
+						stream_context_create($this->opts)
+					), 
+					true)["data"];
+				for($i = 0; $i < count($data); $i++){
+					if($data[$i]["managed"])
+						$cameras[] = ["id" => $data[$i]["_id"], "name" => $data[$i]["name"], "ip" => $data[$i]["host"]];
+				}
+			elseif($conf->setup->unifi->version == "unifi-protect"):
+				$auth = $this->get_auth_string();
+				if(empty($auth))
+					die("Couldn't sign in to CloudKey, no auth-key returned");
+
+				$url = "https://".$conf->setup->domain.":".$conf->setup->port."/api/bootstrap";
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer ".$auth]);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				$rsp = curl_exec($ch);
+				// $info = curl_getinfo($ch);
+				$er = curl_error($ch);
+				if(!empty($er))
+					die("Connection to CloudKey could not be established, error: " . $er);
+				curl_close($ch);
+				$data = json_decode($rsp)->cameras;
+				for($i = 0; $i < count($data); $i++){
+					$cameras[] = ["id" => $data[$i]->id, "name" => $data[$i]->name, "ip" => $data[$i]->host];
+				}
+			endif;
 			usort($cameras, function($a, $b){
 				return strcmp($a["name"], $b["name"]);
 			});
 			return $cameras;
+		}
+
+		private function get_auth_string(){
+			global $conf;
+			$url = "https://".$conf->setup->domain.":".$conf->setup->port."/api/auth";
+			$data = ["username" => $conf->setup->unifi->username, "password" => $conf->setup->unifi->password];
+			$data_string = json_encode($data);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_HEADER, 1);
+			$response = curl_exec($ch);
+			// $info = curl_getinfo($ch);
+			$er = curl_error($ch);
+			if(!empty($er))
+				die("Connection to CloudKey could not be established, error: " . $er);
+			$headers = array_filter(explode("\r\n", substr($response, 0, curl_getinfo($ch, CURLINFO_HEADER_SIZE))));
+			$body = substr($response, curl_getinfo($ch, CURLINFO_HEADER_SIZE));
+			curl_close($ch);
+			foreach($headers as $header){
+				if(preg_match("/^Authorization:/", $header))
+					return trim(str_replace("Authorization:", "", $header));
+			}
+			return "";
 		}
 
 		public function view(Array $camera){

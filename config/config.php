@@ -6,6 +6,7 @@
 		public $setup = null;
 		private $conf_file = "";
 		private $sample_file = "";
+		public $first_step = 0;
 		
 		function __construct(){
 			$this->conf_file = __DIR__ . "/conf.json";
@@ -17,10 +18,13 @@
 
 			$this->setup = (object)[];
 
-			$json = json_decode(file_get_contents($this->conf_file));
+			$tmp = file_get_contents($this->conf_file);
+			$json = json_decode($tmp);
+			if($json == NULL)
+				die("Couldn't decode config");
 			$this->setup = $json;
 			if($json->setup == false && !$this->isItThisPage("setup"))
-				header("Location: setup/1");
+				header("Location: setup/" . $this->first_step);
 		}
 
 		public function set($key, $value){
