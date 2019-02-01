@@ -7,8 +7,7 @@
 	echo $cam->view($conf->setup->cameras);
 ?>
 <script type="text/javascript">
-	var dead_img = "",
-		start_time = Date.now(),
+	var start_time = Date.now(),
 		intervals = [];
 
 	$(window).resize(function(event){
@@ -16,19 +15,6 @@
 	});
 	$(function(){
 		rz();
-		// Henter prøvebilledet, så systemet kan se om det er det der vises
-		$.ajax({
-			url: 'backend',
-			data: {
-				action: "get-image",
-				cameraId: "dead"
-			},
-			type: 'post',
-			cache: false,
-			success: function(output){
-				dead_img = output;
-			}
-		});
 		$('.camera').each(function(){
 			// Løber alle kameraerne igennem, så de bliver opdateret
 			var $this = $(this);
@@ -42,21 +28,9 @@
 
 	// Funktion som holder styr på at billederne er i korrekt gitter, når skærmen skifter størrelse
 	function rz(){
-		var w_h = $(window).height();
-		if(cam_count == 1){
-			$(".camera").height(w_h);
-		} else if(cam_count == 5 || cam_count == 6 || cam_count == 8 || cam_count == 9){
-			$(".camera.layer_1").height(w_h/3*2-1);
-			$(".camera.layer_2").height(w_h/3);
-		} else if(cam_count > 16){
-			$(".camera.layer_1").height(w_h/2)
-			$(".camera.layer_2").height(w_h/6)
-		} else if(14 <= cam_count && cam_count <= 16){
-			$(".camera").height(w_h/4);
-		} else{
-			$(".camera.layer_1").height(w_h/2);
-			$(".camera.layer_2").height(w_h/4);
-		}
+		$(".camera").each(function(index, el){
+			$(el).height($(el).width()*9/16);
+		});
 	}
 
 	// Henter et nyt billede, tjekker om der er gået mere end 15 minutter, siden siden blev loadet og reload i det tilfælde, for at spare RAM
@@ -72,7 +46,8 @@
 
 			// Når billedet er loadet, sæt billedet ind det rigtige sted, så det bliver vist
 			img.onload = function() {
-				$this.html('<img src="' + img.src + '" /><span class="cam-name">' + $this.data("name") + '</span>');
+				// $this.html('<img src="' + img.src + '" /><span class="cam-name">' + $this.data("name") + '</span>');
+				$this.html('<img src="' + img.src + '" />');
 				// Slet objektet, for at spare på RAM
 				img = undefined;
 				delete(img);

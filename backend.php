@@ -103,22 +103,5 @@
 		$conf->set("setup", true);
 		$conf->save();
 		header("Location: view");
-	} elseif($action == "get-image"){
-		// Fetch an image from a camera, compress it and base64 encode it
-		if(isset($_POST["cameraId"]))
-			$cameraId = $_POST["cameraId"];
-		else
-			$cameraId = "dead.img";
-			// die("{\"error\": true, \"reason\": \"missing cameraId\"}");
-
-		// header('Content-Encoding: text/html');
-		header('Content-Encoding: gzip');
-
-		require_once __DIR__ . "/include/cameras.php";
-		$cam = new Cameras();
-		// $str = $cam->fetch_img($cameraId, $_POST['host']);
-		// echo $cameraId;
-		// echo base64_encode($cam->fetch_img($cameraId, $_POST['host']));
-		echo gzencode(base64_encode($cam->fetch_img($cameraId, $_POST['host'])), 9);
 	}
 ?>
