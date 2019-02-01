@@ -18,7 +18,7 @@
 				<label for="password">Password</label>
 				<input type="password" name="password" id="password" class="form-control">
 			</div>
-			<div class="form-control text-right">
+			<div class="form-group text-right">
 				<button class="btn btn-success">Login</button>
 			</div>
 		</form>
@@ -40,7 +40,7 @@
 					<legend for="nvr-port">NVR Port</legend>
 					<input type="text" name="nvr-port" id="nvr-port" class="form-control" value="<?= $conf->setup->port;?>" aria-describedby="nvr-port-HelpBlock">
 					<small id="nvr-port-HelpBlock" class="form-text text-muted">
-						Default is <?= $conf->setup->port;?>
+						Default is 7443
 					</small>
 				</div>
 				<hr>
@@ -111,8 +111,9 @@
 					</small>
 				</div>
 				<hr>
-				<div class="form-group text-right">
-					<button class="btn btn-primary">Next</button>
+				<div class="form-group row">
+					<div class="col-md-6"><a href="<?= ROOT?>setup/0" class="btn btn-warning">Go back</a></div>
+					<div class="col-md-6 text-right"><button class="btn btn-primary">Next</button></div>
 				</div>
 			</form>
 		<?php
@@ -122,18 +123,25 @@
 		?>
 			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-2">
+				<div class="form-group">
+					<legend>Select cameras to display</legend>
 				<?php
 					foreach($cam->fetch_all() as $c){
 				?>
-				<div class="form-group">
-					<legend for="camshow_<?= $c["id"];?>"><?= $c["name"] . " (" . $c["ip"] . ")";?></legend>
-					<input type="checkbox" name="camshow[]" id="camshow_<?= $c["id"];?>" class="form-control" value="<?= $c["id"];?>">
-				</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" name="camshow[]" id="camshow_<?= $c["id"];?>" value="<?= $c["id"];?>" <?= ($cam->selected($c["id"]) ? "checked" : "");?>>
+						<label class="form-check-label" for="camshow_<?= $c["id"];?>">
+							<?= $c["name"] . " (" . $c["ip"] . ")";?>
+						</label>
+					</div>
 				<?php
 					}
 				?>
-				<div class="form-group text-right">
-					<button class="btn btn-primary">Next</button>
+				</div>
+				<hr>
+				<div class="form-group row">
+					<div class="col-md-6"><a href="<?= ROOT?>setup/1" class="btn btn-warning">Go back</a></div>
+					<div class="col-md-6 text-right"><button class="btn btn-primary">Next</button></div>
 				</div>
 			</form>
 		<?php
@@ -142,23 +150,81 @@
 			<!-- View -->
 			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-3">
-				<?php
-					foreach($conf->setup->cameras as $c){
-				?>
-				<div class="form-group">
-					<legend for="camshow_<?= $c->id;?>"><?= $c->name . " (" . $c->ip . ")";?></legend>
-					<input type="number" name="camshow_<?= $c->id;?>" id="camshow_<?= $c->id;?>" class="form-control" value="<?= $c->sort;?>">
+				<div class="row">
+					<div class="col-md-12" id="#grid">
+						<?php
+							require_once __DIR__ . "/include/cameras.php";
+							$cam = new Cameras();
+							echo $cam->view_grid(sizeof($conf->setup->cameras));
+						?>
+					</div>
+					<div class="col-md-12 row">
+						<?php
+							foreach($conf->setup->cameras as $c){
+								if($c->ip == $_SERVER['SERVER_ADDR'])
+									continue;
+						?>
+						<div class="draggable col-md-2">
+							<img class="camera" src="http://<?= $c->ip;?>/snap.jpeg?cb=<?= time();?>" data-sort="<?= $c->sort;?>">
+							<legend><?= $c->name . " (" . $c->ip . ")";?></legend>
+							<input type="hidden" name="camshow_<?= $c->id;?>" value="<?= $c->sort;?>">
+						</div>
+						<?php
+							}
+						?>
+					</div>
+					<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+					<script type="text/javascript">
+						$(function(){
+							rz();
+							$(".draggable").draggable({
+								snap: ".camera"
+							});
+							$(".camera").each(function(index, el){
+								if($(this).data("sort") >= 0){
+									var loc1 = $("div.camera[data-sort='"+$(this).data("sort")+"']").offset();
+									var loc2 = $(this).offset();
+									var loc = {
+										top: loc1.top - loc2.top, 
+										left: loc1.left - loc2.left, 
+									};
+									console.log(loc);
+									$(this).parent(".draggable").css(loc);
+								}
+							});
+							$(".camera").droppable({
+								drop: function(event, ui){
+									console.log($(this)[0].dataset);
+									console.log($($(ui.draggable)[0]));
+									$(ui.draggable[0]).find("input").val($(this)[0].dataset.sort)
+								}
+							});
+						});
+
+						// Funktion som holder styr på at billederne er i korrekt gitter, når skærmen skifter størrelse
+						function rz(){
+							$(".camera").each(function(index, el){
+								$(el).height($(el).width()*9/16+19);
+							});
+						}
+					</script>
+					<style type="text/css">
+						#grid{ margin-bottom: 20px; }
+						.camera{ border: 1px solid grey; }
+						.draggable{  }
+						.draggable legend{ font-size: 0.8em; }
+					</style>
 				</div>
-				<?php
-					}
-				?>
+				<hr>
 				<div class="form-group">
 					<legend for="refreshtime">Refreshtime</legend>
 					<input type="text" name="refreshtime" id="refreshtime" class="form-control" value="<?= $conf->setup->refreshtime;?>">
 					<p class="form-text text-muted">In ms. Default is 1000</p>
 				</div>
-				<div class="form-group text-right">
-					<button class="btn btn-primary">Next</button>
+				<hr>
+				<div class="form-group row">
+					<div class="col-md-6"><a href="<?= ROOT?>setup/2" class="btn btn-warning">Go back</a></div>
+					<div class="col-md-6 text-right"><button class="btn btn-primary">Next</button></div>
 				</div>
 			</form>
 		<?php
@@ -167,10 +233,12 @@
 			<pre>
 				<?= var_export($conf->setup, true);?>
 			</pre>
+			<hr>
 			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-4">
-				<div class="form-group text-right">
-					<button class="btn btn-primary">Gem</button>
+				<div class="form-group row">
+					<div class="col-md-6"><a href="<?= ROOT?>setup/3" class="btn btn-warning">Go back</a></div>
+					<div class="col-md-6 text-right"><button class="btn btn-primary">Save</button></div>
 				</div>
 			</form>
 		<?php

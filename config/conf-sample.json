@@ -8,7 +8,6 @@
 		"password": "",
 		"apiKey": ""
 	},
-	"cachepath": "img/cached/",
 	"auth": {
 		"username": "",
 		"password": ""

@@ -10,6 +10,7 @@
 		} elseif(empty($_POST["password"])){
 			$_SESSION["error"] = "Missing password";
 		} else{
+			$step = (!isset($_POST["step"]) ? $conf->first_step : str_replace(".php", "", $_POST["step"]));
 			if(hash('sha256', $_POST["password"]) == $conf->setup->auth->password && $_POST["username"] == $conf->setup->auth->username)
 				$_SESSION["login"] = true;
 			else
@@ -67,15 +68,33 @@
 		header("Location: setup/3");
 	} elseif($action == "step-3"){
 		// Save the view (sort), compressionrate and refresh time
+		$cams_tmp = [];
 		$cams = [];
 		require_once __DIR__ . "/include/cameras.php";
 		$cam = new Cameras();
 		foreach($cam->fetch_all() as $c){
 			if(isset($_POST["camshow_" . $c["id"]]))
-				$cams[] = (object)["id" => $c["id"],"name" => $c["name"],"ip" => $c["ip"],"sort" => $_POST["camshow_" . $c["id"]]];
+				$cams_tmp[] = (object)["id" => $c["id"], "name" => $c["name"], "ip" => $c["ip"], "sort" => $_POST["camshow_" . $c["id"]]];
+		}
+		for($i = 0; $i < $_POST['grid_size']; $i++){ 
+			$c = 0;
+			foreach($cams_tmp as $cam){
+				if($cam->sort == $i)
+					$c++;
+			}
+			if($c == 0){
+				$cams[] = (object)["id" => "blank_".$i, "name" => "blank_".$i, "ip" => $_SERVER['SERVER_ADDR'], "sort" => $i];
+			} elseif($c == 1){
+				foreach($cams_tmp as $cam){
+					if($cam->sort == $i)
+						$cams[] = $cam;
+				}
+			} else{
+				header("Location: setup/3");
+				exit;
+			}
 		}
 		$conf->set("cameras", $cams);
-		$conf->set("compressionLevel", (empty($_POST["compression-level"]) ? 9 : $_POST["compression-level"]));
 		$conf->set("refreshtime", (empty($_POST["refreshtime"]) ? 1000 : $_POST["refreshtime"]));
 		$conf->save();
 		header("Location: setup/4");
@@ -100,6 +119,6 @@
 		// $str = $cam->fetch_img($cameraId, $_POST['host']);
 		// echo $cameraId;
 		// echo base64_encode($cam->fetch_img($cameraId, $_POST['host']));
-		echo gzencode(base64_encode($cam->fetch_img($cameraId, $_POST['host'])), $conf->setup->compressionLevel);
+		echo gzencode(base64_encode($cam->fetch_img($cameraId, $_POST['host'])), 9);
 	}
 ?>
