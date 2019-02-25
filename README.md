@@ -4,7 +4,7 @@ Clone this project to www-dir:
 ```bash
 sudo mkdir /var/www/html -P
 cd /var/www/html
-git clone http://10.45.0.19:88/sp/unifi-video.git .
+git clone https://github.com/theme1256/UVC-Viewer .
 ```
 
 Execute the setup script:  
