@@ -63,7 +63,7 @@
 			if($conf->setup->unifi->version == "unifi-video"):
 				$data = json_decode(
 					file_get_contents(
-						'https://'.$conf->setup->domain.':'.$conf->setup->port.'/api/2.0/camera?apiKey='.$conf->setup->apiKey, 
+						'https://'.$conf->setup->domain.':'.$conf->setup->port.'/api/2.0/camera?apiKey='.$conf->setup->unifi->apiKey, 
 						false, 
 						stream_context_create($this->opts)
 					), 
