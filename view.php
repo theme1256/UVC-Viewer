@@ -2,7 +2,7 @@
 	require_once __DIR__ . "/include/head.php";
 
 	require_once __DIR__ . "/include/cameras.php";
-	$cam = new Cameras();
+	$cam = new \Cameras();
 
 	echo $cam->view($conf->setup->cameras);
 ?>

@@ -1,5 +1,5 @@
 <?php
-	session_start();
+	\session_start();
 	require_once __DIR__ . "/config/config.php";
 
 	$action = @$_POST["action"];
@@ -10,13 +10,13 @@
 		} elseif(empty($_POST["password"])){
 			$_SESSION["error"] = "Missing password";
 		} else{
-			$step = (!isset($_POST["step"]) ? $conf->first_step : str_replace(".php", "", $_POST["step"]));
-			if(hash('sha256', $_POST["password"]) == $conf->setup->auth->password && $_POST["username"] == $conf->setup->auth->username)
+			$step = (!isset($_POST["step"]) ? $conf->first_step : \str_replace(".php", "", $_POST["step"]));
+			if(\hash('sha256', $_POST["password"]) == $conf->setup->auth->password && $_POST["username"] == $conf->setup->auth->username)
 				$_SESSION["login"] = true;
 			else
 				$_SESSION["error"] = "Username or password not matching";
 		}
-		header("Location: setup/" . $step);
+		\header("Location: setup/" . $step);
 	} elseif($action == "step-0"){
 		if(empty($_POST["nvr-ip"])){
 			$_SESSION["error"] = "Missing NVR IP";
@@ -33,7 +33,7 @@
 			$conf->set("unifi", (object)["version" => $_POST["version"], "username" => "", "password" => "", "apiKey" => ""]);
 			$conf->save();
 		}
-		header("Location: setup/1");
+		\header("Location: setup/1");
 	} elseif($action == "step-1"){
 		if(empty($_POST["nvr-username"]) && $conf->setup->unifi->version == "unifi-protect"){
 			$_SESSION["error"] = "Missing NVR username";
@@ -50,28 +50,28 @@
 				$conf->set("unifi", (object)["version" => $conf->setup->unifi->version, "username" => $_POST["nvr-username"], "password" => $_POST["nvr-password"], "apiKey" => ""]);
 			elseif($conf->setup->unifi->version == "unifi-video")
 				$conf->set("unifi", (object)["version" => $conf->setup->unifi->version, "username" => "", "password" => "", "apiKey" => $_POST["nvr-api-key"]]);
-			$conf->set("auth", (object)["username" => $_POST["username"], "password" => hash('sha256', $_POST["password"])]);
+			$conf->set("auth", (object)["username" => $_POST["username"], "password" => \hash('sha256', $_POST["password"])]);
 			$conf->save();
 		}
-		header("Location: setup/2");
+		\header("Location: setup/2");
 	} elseif($action == "step-2"){
 		// Save the list of cameras to display
 		$cams = [];
 		require_once __DIR__ . "/include/cameras.php";
-		$cam = new Cameras();
+		$cam = new \Cameras();
 		foreach($cam->fetch_all() as $c){
-			if(in_array($c["id"], $_POST['camshow']))
-				$cams[] = (object)["id" => $c["id"],"name" => $c["name"],"ip" => $c["ip"],"sort" => count($cams)];
+			if(\in_array($c["id"], $_POST['camshow']))
+				$cams[] = (object)["id" => $c["id"],"name" => $c["name"],"ip" => $c["ip"],"sort" => \count($cams)];
 		}
 		$conf->set("cameras", $cams);
 		$conf->save();
-		header("Location: setup/3");
+		\header("Location: setup/3");
 	} elseif($action == "step-3"){
 		// Save the view (sort), compressionrate and refresh time
 		$cams_tmp = [];
 		$cams = [];
 		require_once __DIR__ . "/include/cameras.php";
-		$cam = new Cameras();
+		$cam = new \Cameras();
 		foreach($cam->fetch_all() as $c){
 			if(isset($_POST["camshow_" . $c["id"]]))
 				$cams_tmp[] = (object)["id" => $c["id"], "name" => $c["name"], "ip" => $c["ip"], "sort" => $_POST["camshow_" . $c["id"]]];
@@ -97,11 +97,11 @@
 		$conf->set("cameras", $cams);
 		$conf->set("refreshtime", (empty($_POST["refreshtime"]) ? 1000 : $_POST["refreshtime"]));
 		$conf->save();
-		header("Location: setup/4");
+		\header("Location: setup/4");
 	} elseif($action == "step-4"){
 		// Save the setup
 		$conf->set("setup", true);
 		$conf->save();
-		header("Location: view");
+		\header("Location: view");
 	}
 ?>

@@ -3,7 +3,7 @@
 ?>
 <div class="container">
 	<?php
-		$step = (!isset($_GET["step"]) ? $conf->first_step : str_replace(".php", "", $_GET["step"]));
+		$step = (!isset($_GET["step"]) ? $conf->first_step : \str_replace(".php", "", $_GET["step"]));
 
 		if($conf->setup->setup == true && $_SESSION["login"] == false):
 	?>
@@ -119,7 +119,7 @@
 		<?php
 			elseif($step == 2):
 				require_once __DIR__ . "/include/cameras.php";
-				$cam = new Cameras();
+				$cam = new \Cameras();
 		?>
 			<form method="POST" action="<?= ROOT;?>backend">
 				<input type="hidden" name="action" value="step-2">
@@ -154,8 +154,8 @@
 					<div class="col-md-12" id="#grid">
 						<?php
 							require_once __DIR__ . "/include/cameras.php";
-							$cam = new Cameras();
-							echo $cam->view_grid(sizeof($conf->setup->cameras));
+							$cam = new \Cameras();
+							echo $cam->view_grid(\sizeof($conf->setup->cameras));
 						?>
 					</div>
 					<div class="col-md-12 row">
@@ -188,14 +188,11 @@
 										top: loc1.top - loc2.top, 
 										left: loc1.left - loc2.left, 
 									};
-									console.log(loc);
 									$(this).parent(".draggable").css(loc);
 								}
 							});
 							$(".camera").droppable({
 								drop: function(event, ui){
-									console.log($(this)[0].dataset);
-									console.log($($(ui.draggable)[0]));
 									$(ui.draggable[0]).find("input").val($(this)[0].dataset.sort)
 								}
 							});
@@ -231,7 +228,7 @@
 			elseif($step == 4):
 		?>
 			<pre>
-				<?= var_export($conf->setup, true);?>
+				<?= \var_export($conf->setup, true);?>
 			</pre>
 			<hr>
 			<form method="POST" action="<?= ROOT;?>backend">

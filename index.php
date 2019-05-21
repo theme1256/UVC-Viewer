@@ -1,3 +1,3 @@
 <?php
-	header("Location: view");
+	\header("Location: view");
 ?>

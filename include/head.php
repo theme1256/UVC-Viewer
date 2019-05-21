@@ -1,11 +1,11 @@
 <?php
-	session_start();
+	\session_start();
 	require_once __DIR__ . "/../config/config.php";
 
 	if($_SERVER["HTTP_HOST"] == "10.45.0.19")
-		define("ROOT", "/unifi/");
+		\define("ROOT", "/unifi/");
 	else
-		define("ROOT", "/");
+		\define("ROOT", "/");
 ?>
 <!DOCTYPE html>
 <html<?= ($conf->isItThisPage("view") ? " class='c-none'" : "");?>>
