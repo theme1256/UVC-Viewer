@@ -28,12 +28,9 @@ sudo a2enmod rewrite
 sudo sed -i 's/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride None/<Directory \/var\/www\/>\n	Options Indexes FollowSymLinks\n	AllowOverride All/g' /etc/apache2/apache2.conf
 sudo service apache2 restart
 
-sudo apt install php libapache2-mod-php -y
+sudo apt install php libapache2-mod-php php-curl curl -y
 
-sudo wget -q -o=tw.deb https://download.teamviewer.com/download/linux/version_13x/teamviewer-host_armhf.deb
-sudo dpkg --install tw.deb
-sudo rm tw.deb
-sudo apt install -f
+sudo apt install -f -y
 
 sudo chown www-data:www-data /var/www -R
 sudo chmod 775 /var/www -R
